@@ -8,6 +8,17 @@ resources:
       gitProvider: {{ .Values.git_provider }}
       path: {{ .Values.git_path }}
 
+  - name: mvn_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: {{ .Values.artifactory }}
+
+  - name: cron_trigger
+    type: CronTrigger
+    configuration:
+      interval: '0-59/5 * * * *'
+
+
 #  - name: build-info
 #    type: BuildInfo
 #    configuration:
@@ -24,16 +35,13 @@ pipelines:
       - name: maven_build
         type: MvnBuild
         configuration:
-          nodePool: default-dynamic-nodepool
-          sourceLocation: .
-          mvnCommand: clean install -ntp
-          configFileLocation: .
-          configFileName: pom.xml
+          deployerSnapshotRepo: {{ .Values.snapshot_repo }}
+          deployerReleaseRepo: {{ .Values.release_repo }}
           inputResources:
-            - name: {{ .Values.git_provider }}
-              trigger: true
+            - name: mvn_repo
+            - name: cron_trigger
           integrations:
-            - name:  {{ .Values.artifactory }}
+            - name: {{ .Values.artifactory }}
           runtime:
             type: image
             image:
@@ -51,3 +59,12 @@ pipelines:
           onComplete:
             - echo $run_var
             - echo "Running $pipeline_name | $step_name on node ID $step_node_id"
+
+#      - name: publish_build
+#        type: PublishBuildInfo
+#        configuration:
+#          forceXrayScan: false
+#          inputSteps:
+#            - name: mvn_build_step
+#          outputResources:
+#            - name: mvn_build_info

@@ -1,4 +1,5 @@
 git_provider: GitHub
 git_path: philipfoster/JFrog_CICD_Demo
 artifactory: Artifactory
-maven_repo: dev-demo-libs-snapshot-local
+snapshot_repo: dev-demo-libs-snapshot
+release_repo: dev-demo-libs-release
