@@ -1,15 +1,16 @@
 resources:
-  - name: github
+  - name: git_repo
     type: GitRepo
     configuration:
-      gitProvider: GitHub
-      path: philipfoster/JFrog_CICD_Demo
-  - name: build-info
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: Artifactory
-      buildName: Jfrog_Demo
-      buildNumber: 1
+      gitProvider: {{ .Values.git_provider }}
+      path: {{ .Values.git_path }}
+
+#  - name: build-info
+#    type: BuildInfo
+#    configuration:
+#      sourceArtifactory: Artifactory
+#      buildName: Jfrog_Demo
+#      buildNumber: 1
 pipelines:
   - name: jfrog_demo_pipeline
     configuration:
@@ -26,10 +27,10 @@ pipelines:
           configFileLocation: .
           configFileName: pom.xml
           inputResources:
-            - name: github
-              trigger: false
+            - name: {{ .Values.git_provider }}
+              trigger: true
           integrations:
-            - name: Artifactory
+            - name:  {{ .Values.artifactory }}
           runtime:
             type: image
             image:
