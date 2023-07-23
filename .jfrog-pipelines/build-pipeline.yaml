@@ -38,7 +38,7 @@ pipelines:
           deployerSnapshotRepo: {{ .Values.snapshot_repo }}
           deployerReleaseRepo: {{ .Values.release_repo }}
           inputResources:
-            - name: mvn_repo
+            - name: git_repo
             - name: cron_trigger
           integrations:
             - name: {{ .Values.artifactory }}
