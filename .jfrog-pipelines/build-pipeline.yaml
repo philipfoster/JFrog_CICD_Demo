@@ -2,69 +2,35 @@ template: true
 valuesFilePath: ./values.yml
 
 resources:
-  - name: git_repo
+  - name: mvn_repo
     type: GitRepo
     configuration:
-      gitProvider: {{ .Values.git_provider }}
-      path: {{ .Values.git_path }}
+      path: {{ .Values.repoPath }}
+      gitProvider: {{ .Values.gitProvider }}
 
   - name: mvn_build_info
     type: BuildInfo
     configuration:
       sourceArtifactory: {{ .Values.artifactory }}
 
-  - name: cron_trigger
-    type: CronTrigger
-    configuration:
-      interval: '0-59/5 * * * *'
-
-
-#  - name: build-info
-#    type: BuildInfo
-#    configuration:
-#      sourceArtifactory: Artifactory
-#      buildName: Jfrog_Demo
-#      buildNumber: 1
 pipelines:
-  - name: jfrog_demo_pipeline
-    configuration:
-      environmentVariables:
-        readOnly:
-          build_id: '1.0.$run_number'
+  - name: demo_maven
     steps:
-      - name: maven_build
+      - name: mvn_build_step
         type: MvnBuild
         configuration:
-          deployerSnapshotRepo: {{ .Values.snapshot_repo }}
-          deployerReleaseRepo: {{ .Values.release_repo }}
+          deployerSnapshotRepo: {{ .Values.snapshotRepo }}
+          deployerReleaseRepo: {{ .Values.releaseRepo }}
           inputResources:
-            - name: git_repo
-            - name: cron_trigger
+            - name: mvn_repo
           integrations:
             - name: {{ .Values.artifactory }}
-          runtime:
-            type: image
-            image:
-              auto:
-                language: java
-                versions:
-                  - "17"
-        execution:
-          onStart:
-            - javac -version
-            - mvn --version
-#            - add_pipeline_variables previous_backend_ver=${build_id}
-#            - sed -ie 's/Default-Server/ArtifactoryUnified/g' $res_github_resourcePath/java-backend-service/mvn-art-config
-#            - sed -ie "s/1.0.0/$build_id/g" $res_github_resourcePath/java-backend-service/pom.xml
-          onComplete:
-            - echo $run_var
-            - echo "Running $pipeline_name | $step_name on node ID $step_node_id"
 
-#      - name: publish_build
-#        type: PublishBuildInfo
-#        configuration:
-#          forceXrayScan: false
-#          inputSteps:
-#            - name: mvn_build_step
-#          outputResources:
-#            - name: mvn_build_info
+      - name: publish_build
+        type: PublishBuildInfo
+        configuration:
+          forceXrayScan: false
+          inputSteps:
+            - name: mvn_build_step
+          outputResources:
+            - name: mvn_build_info
