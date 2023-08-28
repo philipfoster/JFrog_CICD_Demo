@@ -17,7 +17,7 @@ pipelines:
 
   - name: demo_maven
     configuration:
-      nodePool: default-dynamic-nodepool
+      nodePool: eks-pool
     steps:
       - name: mvn_build_step
         type: MvnBuild
