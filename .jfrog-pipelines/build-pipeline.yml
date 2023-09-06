@@ -24,6 +24,8 @@ pipelines:
           deployerReleaseRepo: {{ .Values.releaseRepo }}
           inputResources:
             - name: mvn_repo
+          outputResources:
+            - name: build_info
           integrations:
             - name: {{ .Values.artifactory }}
 
