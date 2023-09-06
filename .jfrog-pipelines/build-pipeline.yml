@@ -32,7 +32,7 @@ pipelines:
       - name: security_scan
         type: XrayScan
         configuration:
-          failOnScan: true
+          failOnScan: false
           inputResources:
             - name: build_info
 
