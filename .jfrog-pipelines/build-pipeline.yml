@@ -13,28 +13,37 @@ resources:
     configuration:
       sourceArtifactory: {{ .Values.artifactory }}
 
+
 pipelines:
 
   - name: demo_maven
     steps:
-      - name: mvn_build_step
+      - name: mvn_build
         type: MvnBuild
         configuration:
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
           inputResources:
             - name: mvn_repo
-          outputResources:
-            - name: build_info
           integrations:
             - name: {{ .Values.artifactory }}
+
+
+      - name: publish_build_info
+        type: PublishBuildInfo
+        configuration:
+          forceXrayScan: false
+          inputSteps:
+            - name: mvn_build
+          outputResources:
+            - name: build_info
 
       - name: security_scan
         type: XrayScan
         configuration:
           failOnScan: false
           inputResources:
-            - name: build_info
+            - name: publish_build_info
 
 
 #      - name: publish_build_info
