@@ -43,7 +43,7 @@ pipelines:
         configuration:
           failOnScan: false
           inputResources:
-            - name: publish_build_info
+            - name: build_info
 
 
 #      - name: publish_build_info
