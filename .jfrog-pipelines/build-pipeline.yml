@@ -57,6 +57,7 @@ pipelines:
           dockerImageName: {{ .Values.docker.imageName }}
           dockerImageTag: ${run_number}
           inputResources:
+            - name: security_scan
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
