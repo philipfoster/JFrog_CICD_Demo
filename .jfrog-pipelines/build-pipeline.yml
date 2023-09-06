@@ -16,7 +16,7 @@ resources:
   - name: docker_build_info
     type: BuildInfo
     configuration:
-      sourceArtifactory: { { .Values.artifactory.name }}
+      sourceArtifactory: {{ .Values.artifactory.name }}
 
 pipelines:
 
