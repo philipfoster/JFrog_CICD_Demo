@@ -35,7 +35,6 @@ pipelines:
           failOnScan: true
           inputResources:
             - name: build_info
-            - name: mvn_build_step
 
 
 #      - name: publish_build_info
