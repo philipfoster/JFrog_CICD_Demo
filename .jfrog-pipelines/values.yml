@@ -1,5 +1,10 @@
 gitProvider: GitHub
 repoPath: philipfoster/JFrog_CICD_Demo
-artifactory: Artifactory
 snapshotRepo: dev-demo-libs-snapshot
 releaseRepo: dev-demo-libs-release
+
+artifactory:
+  name: Artifactory
+
+docker:
+  imageName: nvsconsulting.jfrog.io/cicd-demo-container-images/swampup23-demo-backend

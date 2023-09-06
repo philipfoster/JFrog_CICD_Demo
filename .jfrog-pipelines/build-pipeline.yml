@@ -2,17 +2,21 @@ template: true
 valuesFilePath: ./values.yml
 
 resources:
-  - name: mvn_repo
+  - name: git_repo
     type: GitRepo
     configuration:
       path: {{ .Values.repoPath }}
       gitProvider: {{ .Values.gitProvider }}
 
-  - name: build_info
+  - name: mvn_build_info
     type: BuildInfo
     configuration:
-      sourceArtifactory: {{ .Values.artifactory }}
+      sourceArtifactory: {{ .Values.artifactory.name }}
 
+  - name: docker_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: { { .Values.artifactory.name }}
 
 pipelines:
 
@@ -24,33 +28,55 @@ pipelines:
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
           inputResources:
-            - name: mvn_repo
+            - name: git_repo
           integrations:
-            - name: {{ .Values.artifactory }}
+            - name: {{ .Values.artifactory.name }}
 
 
-      - name: publish_build_info
+      - name: publish_mvn_build
         type: PublishBuildInfo
         configuration:
           forceXrayScan: false
           inputSteps:
             - name: mvn_build
           outputResources:
-            - name: build_info
+            - name: mvn_build_info
 
       - name: security_scan
         type: XrayScan
         configuration:
           failOnScan: false
           inputResources:
-            - name: build_info
+            - name: mvn_build_info
 
+      - name: build_docker_image
+        type: DockerBuild
+        configuration:
+          dockerFileLocation: .
+          dockerFileName: Dockerfile
+          dockerImageName: {{ .Values.docker.imageName }}
+          dockerImageTag: ${run_number}
+          inputResources:
+            - name: git_repo
+          integrations:
+            - name: {{ .Values.artifactory.name }}
 
-#      - name: publish_build_info
-#        type: PublishBuildInfo
-#        configuration:
-#          forceXrayScan: false
-#          inputSteps:
-#            - name: mvn_build_step
-#          outputResources:
-#            - name: build_info
+      - name: push_docker_image
+        type: DockerPush
+        configuration:
+          forceXrayScan: true
+          integrations:
+            - name: {{ .Values.artifactory.name }}
+          inputSteps:
+            - name: build_docker_image
+          outputResources:
+            - name: docker_build_info
+
+      - name: publish_docker_build
+        type: PublishBuildInfo
+        configuration:
+          forceXrayScan: false
+          inputSteps:
+            - name: push_docker_image
+          outputResources:
+            - name: docker_build_info
