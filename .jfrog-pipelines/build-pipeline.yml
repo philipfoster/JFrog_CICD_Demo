@@ -34,11 +34,11 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
         execution:
           onStart:
-            - echo $PATH
-            - ls $PATH
+            - echo $step_tmp_dir
+            - ls $step_tmp_dir
           onSuccess:
             - echo "Done building JAR"
-            - ls $PATH
+            - ls $step_tmp_dir
             - add_run_files target target
 #            - mkdir $shared_workspace/target
 #            - cp -r $(pwd)/target/* $shared_workspace/target
