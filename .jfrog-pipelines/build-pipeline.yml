@@ -108,6 +108,7 @@ pipelines:
             - echo "Restoring target directory"
             - mkdir ./target
             - cp -r $shared_workspace/target/* ./target
+            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'\n
 
       - name: push_docker_image
         type: DockerPush
