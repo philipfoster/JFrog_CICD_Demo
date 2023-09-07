@@ -60,6 +60,8 @@ pipelines:
           deployerReleaseRepo: {{ .Values.releaseRepo }}
 #          configFileLocation: .jfrog-pipelines/config/settings.xml
 #          sourceLocation: .
+          inputResources:
+            - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
           inputSteps:
@@ -76,6 +78,8 @@ pipelines:
           dockerImageTag: ${run_number}
           inputSteps:
             - name: mvn_test
+          inputResources:
+            - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
 
