@@ -33,10 +33,12 @@ pipelines:
           integrations:
             - name: {{ .Values.artifactory.name }}
         execution:
+          onStart:
+            - echo $PATH
+            - ls $PATH
           onSuccess:
             - echo "Done building JAR"
-            - ls
-            - ls workspace
+            - ls $PATH
             - add_run_files target target
 #            - mkdir $shared_workspace/target
 #            - cp -r $(pwd)/target/* $shared_workspace/target
