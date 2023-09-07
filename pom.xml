@@ -81,7 +81,10 @@
                                     <resources>
                                         <resource>
                                             <directory>target</directory>
-                                            <includes>**</includes>
+                                            <includes>
+                                                <include>**</include>
+
+                                            </includes>
                                         </resource>
                                     </resources>
                                 </configuration>

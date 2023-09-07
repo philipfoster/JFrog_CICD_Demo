@@ -111,6 +111,7 @@ pipelines:
 #            - cp -r $shared_workspace/target/* ./target
             - pushd $shared_workspace
             - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+            - ls -lath target
             - popd
 
       - name: push_docker_image
