@@ -55,8 +55,8 @@ pipelines:
           onExecute:
             - mkdir tmp
             - restore_run_files jfrog tmp
-            - ls tmp
             - pwd
+            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 
       - name: publish_mvn_build
         type: PublishBuildInfo
@@ -65,6 +65,7 @@ pipelines:
           forceXrayScan: false
           inputSteps:
             - name: mvn_package
+            - name: test
           outputResources:
             - name: mvn_build_info
 
