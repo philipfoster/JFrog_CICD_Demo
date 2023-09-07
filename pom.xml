@@ -77,11 +77,11 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${env.shared_workspace}</outputDirectory>
+                                    <outputDirectory>${stash_dir}/target</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>target</directory>
-                                            <includes>*</includes>
+                                            <includes>**</includes>
                                         </resource>
                                     </resources>
                                 </configuration>

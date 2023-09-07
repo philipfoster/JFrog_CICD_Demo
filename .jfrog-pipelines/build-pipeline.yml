@@ -22,7 +22,7 @@ pipelines:
         type: MvnBuild
         configuration:
           affinityGroup: build
-          mvnCommand: clean install -DskipTests -Pcicd
+          mvnCommand: clean install -DskipTests -Pcicd -Dstash_dir=$shared_workspace
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
 #          configFileLocation: .jfrog-pipelines/config
@@ -32,6 +32,9 @@ pipelines:
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
+        execution:
+          onStart:
+            - mkdir $shared_workspace/target
 #        execution:
 #          onStart:
 #            - echo $step_tmp_dir
