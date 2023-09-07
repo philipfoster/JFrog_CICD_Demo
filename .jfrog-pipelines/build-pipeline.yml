@@ -52,7 +52,7 @@ pipelines:
           inputSteps:
             - name: mvn_package
         execution:
-          onStart:
+          onExecute:
             - mkdir tmp
             - restore_run_files jfrog tmp
             - ls tmp
