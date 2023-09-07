@@ -36,9 +36,12 @@ pipelines:
           onStart:
             - echo $step_tmp_dir
             - ls $step_tmp_dir
+            - ls "/var/opt/jfrog/pipelines/data/$pipeline_name/runs/$run_number/steps/$step_name/$step_id"
+
           onSuccess:
             - echo "Done building JAR"
             - ls $step_tmp_dir
+            - ls "/var/opt/jfrog/pipelines/data/$pipeline_name/runs/$run_number/steps/$step_name/$step_id"
             - add_run_files $step_tmp_dir/target target
 #            - mkdir $shared_workspace/target
 #            - cp -r $(pwd)/target/* $shared_workspace/target
