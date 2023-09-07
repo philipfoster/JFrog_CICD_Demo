@@ -64,7 +64,7 @@ pipelines:
           affinityGroup: build
           forceXrayScan: false
           inputSteps:
-            - name: mvn_package
+#            - name: mvn_package
             - name: test
           outputResources:
             - name: mvn_build_info
