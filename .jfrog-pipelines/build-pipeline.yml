@@ -35,8 +35,9 @@ pipelines:
         execution:
           onSuccess:
             - echo "Done building JAR"
-            - mkdir $shared_workspace/target
-            - cp -r ./target/* $shared_workspace/target
+            - add_run_files target target
+#            - mkdir $shared_workspace/target
+#            - cp -r $(pwd)/target/* $shared_workspace/target
 
       - name: publish_mvn_build
         type: PublishBuildInfo
@@ -75,7 +76,8 @@ pipelines:
           onStart:
             - echo "Restoring target directory"
             - mkdir ./target
-            - cp -r $shared_workspace/target/* ./target
+            - restore_run_files target target
+#            - cp -r $shared_workspace/target/* ./target
 
 
       - name: build_docker_image
@@ -96,7 +98,7 @@ pipelines:
           onStart:
             - echo "Restoring target directory"
             - mkdir ./target
-            - cp -r $shared_workspace/target/* ./target
+            - restore_run_files target target
 
       - name: push_docker_image
         type: DockerPush
