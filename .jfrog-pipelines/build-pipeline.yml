@@ -21,6 +21,7 @@ pipelines:
       - name: mvn_package
         type: MvnBuild
         configuration:
+          affinityGroup: build
           mvnCommand: clean package -DskipTests
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
@@ -35,7 +36,8 @@ pipelines:
       - name: publish_mvn_build
         type: PublishBuildInfo
         configuration:
-          forceXrayScan: true
+          affinityGroup: build
+          forceXrayScan: false
           inputSteps:
             - name: mvn_package
           outputResources:
@@ -44,6 +46,7 @@ pipelines:
       - name: security_scan
         type: XrayScan
         configuration:
+          affinityGroup: build
           failOnScan: false
           inputResources:
             - name: mvn_build_info
@@ -51,6 +54,7 @@ pipelines:
       - name: mvn_test
         type: MvnBuild
         configuration:
+          affinityGroup: build
           mvnCommand: test
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
@@ -64,33 +68,36 @@ pipelines:
             - name: security_scan
 
 
-#      - name: build_docker_image
-#        type: DockerBuild
-#        configuration:
-#          dockerFileLocation: .
-#          dockerFileName: Dockerfile
-#          dockerImageName: {{ .Values.docker.imageName }}
-#          dockerImageTag: ${run_number}
-#          inputResources:
-#            - name: mvn_package
-#            - name: git_repo
-#          integrations:
-#            - name: {{ .Values.artifactory.name }}
-#
-#      - name: push_docker_image
-#        type: DockerPush
-#        configuration:
-#          forceXrayScan: true
-#          integrations:
-#            - name: {{ .Values.artifactory.name }}
-#          inputSteps:
-#            - name: build_docker_image
-#          outputResources:
-#            - name: docker_build_info
+      - name: build_docker_image
+        type: DockerBuild
+        configuration:
+          affinityGroup: build
+          dockerFileLocation: .
+          dockerFileName: Dockerfile
+          dockerImageName: {{ .Values.docker.imageName }}
+          dockerImageTag: ${run_number}
+          inputResources:
+            - name: mvn_package
+            - name: git_repo
+          integrations:
+            - name: {{ .Values.artifactory.name }}
+
+      - name: push_docker_image
+        type: DockerPush
+        configuration:
+          affinityGroup: build
+          forceXrayScan: true
+          integrations:
+            - name: {{ .Values.artifactory.name }}
+          inputSteps:
+            - name: build_docker_image
+          outputResources:
+            - name: docker_build_info
 #
 #      - name: publish_docker_build
 #        type: PublishBuildInfo
 #        configuration:
+#          affinityGroup: build
 #          forceXrayScan: false
 #          inputSteps:
 #            - name: push_docker_image
