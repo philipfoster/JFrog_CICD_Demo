@@ -49,6 +49,7 @@ pipelines:
       - name: test
         type: Bash
         configuration:
+          affinityGroup: build
           inputSteps:
             - name: mvn_package
         execution:
