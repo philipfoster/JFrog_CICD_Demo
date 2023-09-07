@@ -13,18 +13,15 @@ resources:
     configuration:
       sourceArtifactory: {{ .Values.artifactory.name }}
 
-  - name: docker_build_info
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: {{ .Values.artifactory.name }}
 
 pipelines:
 
   - name: demo_maven
     steps:
-      - name: mvn_build
+      - name: mvn_package
         type: MvnBuild
         configuration:
+          mvnCommand: clean package -DskipTests
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
           inputResources:
@@ -32,13 +29,12 @@ pipelines:
           integrations:
             - name: {{ .Values.artifactory.name }}
 
-
       - name: publish_mvn_build
         type: PublishBuildInfo
         configuration:
-          forceXrayScan: false
+          forceXrayScan: true
           inputSteps:
-            - name: mvn_build
+            - name: mvn_package
           outputResources:
             - name: mvn_build_info
 
@@ -49,35 +45,47 @@ pipelines:
           inputResources:
             - name: mvn_build_info
 
-      - name: build_docker_image
-        type: DockerBuild
+      - name: mvn_test
+        type: MvnBuild
         configuration:
-          dockerFileLocation: .
-          dockerFileName: Dockerfile
-          dockerImageName: {{ .Values.docker.imageName }}
-          dockerImageTag: ${run_number}
+          mvnCommand: test
+          deployerSnapshotRepo: {{ .Values.snapshotRepo }}
+          deployerReleaseRepo: {{ .Values.releaseRepo }}
           inputResources:
-            - name: mvn_build
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
 
-      - name: push_docker_image
-        type: DockerPush
-        configuration:
-          forceXrayScan: true
-          integrations:
-            - name: {{ .Values.artifactory.name }}
-          inputSteps:
-            - name: build_docker_image
-          outputResources:
-            - name: docker_build_info
 
-      - name: publish_docker_build
-        type: PublishBuildInfo
-        configuration:
-          forceXrayScan: false
-          inputSteps:
-            - name: push_docker_image
-          outputResources:
-            - name: docker_build_info
+#      - name: build_docker_image
+#        type: DockerBuild
+#        configuration:
+#          dockerFileLocation: .
+#          dockerFileName: Dockerfile
+#          dockerImageName: {{ .Values.docker.imageName }}
+#          dockerImageTag: ${run_number}
+#          inputResources:
+#            - name: mvn_package
+#            - name: git_repo
+#          integrations:
+#            - name: {{ .Values.artifactory.name }}
+#
+#      - name: push_docker_image
+#        type: DockerPush
+#        configuration:
+#          forceXrayScan: true
+#          integrations:
+#            - name: {{ .Values.artifactory.name }}
+#          inputSteps:
+#            - name: build_docker_image
+#          outputResources:
+#            - name: docker_build_info
+#
+#      - name: publish_docker_build
+#        type: PublishBuildInfo
+#        configuration:
+#          forceXrayScan: false
+#          inputSteps:
+#            - name: push_docker_image
+#          outputResources:
+#            - name: docker_build_info
