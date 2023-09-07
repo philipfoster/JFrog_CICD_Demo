@@ -61,7 +61,7 @@ pipelines:
           integrations:
             - name: {{ .Values.artifactory.name }}
           inputSteps:
-            - security_scan
+            - name: security_scan
 
 
 #      - name: build_docker_image
