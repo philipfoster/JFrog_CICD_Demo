@@ -123,6 +123,15 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
           inputSteps:
             - name: build_docker_image
+        execution:
+          onStart:
+#            - echo "Restoring target directory"
+#            - mkdir ./target
+#            - cp -r $shared_workspace/target/* ./target
+            - pushd $shared_workspace
+            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+            - ls -lath target
+            - popd
 
 #
 #      - name: publish_docker_build
