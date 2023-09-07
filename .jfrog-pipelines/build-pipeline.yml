@@ -35,7 +35,7 @@ pipelines:
         execution:
           onSuccess:
             - echo "Done building JAR"
-            - ls
+            - ls workspace
             - add_run_files target target
 #            - mkdir $shared_workspace/target
 #            - cp -r $(pwd)/target/* $shared_workspace/target
