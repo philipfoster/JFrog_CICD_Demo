@@ -82,11 +82,11 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
           inputSteps:
             - name: security_scan
-        execution:
-          onStart:
-            - echo "Restoring target directory"
-            - mkdir ./target
-            - cp -r $shared_workspace/target/* ./target
+#        execution:
+#          onStart:
+#            - echo "Restoring target directory"
+#            - mkdir ./target
+#            - cp -r $shared_workspace/target/* ./target
 
 
       - name: build_docker_image
@@ -97,18 +97,19 @@ pipelines:
           dockerFileName: Dockerfile
           dockerImageName: {{ .Values.docker.imageName }}
           dockerImageTag: ${run_number}
+          dockerOptions: --build-arg TARGET_DIR=$shared_workspace/target
           inputSteps:
             - name: mvn_test
           inputResources:
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
-        execution:
-          onStart:
-            - echo "Restoring target directory"
-            - mkdir ./target
-            - cp -r $shared_workspace/target/* ./target
-            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+#        execution:
+#          onStart:
+#            - echo "Restoring target directory"
+#            - mkdir ./target
+#            - cp -r $shared_workspace/target/* ./target
+#            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 
       - name: push_docker_image
         type: DockerPush
