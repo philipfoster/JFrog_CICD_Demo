@@ -24,6 +24,9 @@ pipelines:
           mvnCommand: clean package -DskipTests
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
+          configFileLocation: .jfrog-pipelines/config
+          configFileName: settings.xml
+          sourceLocation: .
           inputResources:
             - name: git_repo
           integrations:
@@ -51,10 +54,14 @@ pipelines:
           mvnCommand: test
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
+          configFileLocation: .jfrog-pipelines/config/settings.xml
+          sourceLocation: .
           inputResources:
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
+          inputSteps:
+            - security_scan
 
 
 #      - name: build_docker_image
