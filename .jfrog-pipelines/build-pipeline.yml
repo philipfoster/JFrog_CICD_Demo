@@ -104,12 +104,14 @@ pipelines:
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
-#        execution:
-#          onStart:
+        execution:
+          onStart:
 #            - echo "Restoring target directory"
 #            - mkdir ./target
 #            - cp -r $shared_workspace/target/* ./target
-#            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+            - pushd $shared_workspace
+            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+            - popd
 
       - name: push_docker_image
         type: DockerPush
