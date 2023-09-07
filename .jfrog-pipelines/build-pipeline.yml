@@ -48,6 +48,9 @@ pipelines:
 
       - name: test
         type: Bash
+        configurations:
+          inputSteps:
+            - name: mvn_package
         execution:
           onStart:
             - mkdir tmp
