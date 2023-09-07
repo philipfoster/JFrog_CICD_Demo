@@ -22,7 +22,7 @@ pipelines:
         type: MvnBuild
         configuration:
           affinityGroup: build
-          mvnCommand: clean package -DskipTests
+          mvnCommand: clean install -DskipTests -Pcicd
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
 #          configFileLocation: .jfrog-pipelines/config
@@ -46,27 +46,13 @@ pipelines:
 #            - mkdir $shared_workspace/target
 #            - cp -r $(pwd)/target/* $shared_workspace/target
 
-      - name: test
-        type: Bash
-        configuration:
-          affinityGroup: build
-          inputSteps:
-            - name: mvn_package
-        execution:
-          onExecute:
-            - mkdir tmp
-            - restore_run_files jfrog tmp
-            - pwd
-            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-
       - name: publish_mvn_build
         type: PublishBuildInfo
         configuration:
           affinityGroup: build
           forceXrayScan: false
           inputSteps:
-#            - name: mvn_package
-            - name: test
+            - name: mvn_package
           outputResources:
             - name: mvn_build_info
 
@@ -97,8 +83,7 @@ pipelines:
           onStart:
             - echo "Restoring target directory"
             - mkdir ./target
-            - restore_run_files target $step_tmp_dir/target
-#            - cp -r $shared_workspace/target/* ./target
+            - cp -r $shared_workspace/target/* ./target
 
 
       - name: build_docker_image
@@ -119,7 +104,7 @@ pipelines:
           onStart:
             - echo "Restoring target directory"
             - mkdir ./target
-            - restore_run_files target $step_tmp_dir/target
+            - cp -r $shared_workspace/target/* ./target
 
       - name: push_docker_image
         type: DockerPush
