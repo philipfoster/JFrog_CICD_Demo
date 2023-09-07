@@ -92,8 +92,7 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
           inputSteps:
             - name: build_docker_image
-          outputResources:
-            - name: docker_build_info
+
 #
 #      - name: publish_docker_build
 #        type: PublishBuildInfo
