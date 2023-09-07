@@ -48,7 +48,7 @@ pipelines:
 
       - name: test
         type: Bash
-        configurations:
+        configuration:
           inputSteps:
             - name: mvn_package
         execution:
