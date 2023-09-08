@@ -17,6 +17,7 @@ resources:
     type: FileSpec
     configuration:
       target: $shared_workspace
+      sourceArtifactory: {{ .Values.artifactory.name }}
 
 pipelines:
 
