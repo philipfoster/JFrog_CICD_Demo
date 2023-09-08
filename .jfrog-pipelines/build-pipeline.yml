@@ -126,7 +126,6 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
           inputSteps:
             - name: build_docker_image
-        execution:
 
 
 #
