@@ -103,17 +103,17 @@ pipelines:
           dockerFileName: Dockerfile
           dockerImageName: {{ .Values.docker.imageName }}
           dockerImageTag: ${run_number}
-          dockerOptions: --build-arg TARGET_DIR=$res_git_repo_resourcePath/target
+          dockerOptions: --build-arg TARGET_DIR=.
           inputSteps:
             - name: mvn_test
           inputResources:
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
-        execution:
-          onStart:
+#        execution:
+#          onStart:
 #            - add_cache_files $res_git_repo_resourcePath/target targetDir
-            - restore_cache_files targetDir $res_git_repo_resourcePath/target
+#            - restore_cache_files targetDir $res_git_repo_resourcePath/target
       #          onStart:
 ##            - echo "Restoring target directory"
 ##            - mkdir ./target
