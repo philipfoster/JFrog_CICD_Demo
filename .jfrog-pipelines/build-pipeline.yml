@@ -13,6 +13,10 @@ resources:
     configuration:
       sourceArtifactory: {{ .Values.artifactory.name }}
 
+  - name: docker_resources
+    type: FileSpec
+    configuration:
+      target: $shared_workspace
 
 pipelines:
 
@@ -102,6 +106,7 @@ pipelines:
             - name: mvn_test
           inputResources:
             - name: git_repo
+            - name: docker_resources
           integrations:
             - name: {{ .Values.artifactory.name }}
         execution:
