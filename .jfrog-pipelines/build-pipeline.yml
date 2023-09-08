@@ -13,6 +13,12 @@ resources:
     configuration:
       sourceArtifactory: {{ .Values.artifactory.name }}
 
+  - name: docker_resources
+    type: FileSpec
+    configuration:
+      sourceArtifactory: {{ .Values.artifactory.name }}
+      pattern: {{ .Values.artifactory.snapshotRepo }}/*.jar
+
 pipelines:
 
   - name: demo_maven
@@ -33,7 +39,8 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
         execution:
           onSuccess:
-            - add_cache_files $res_git_repo_resourcePath/target targetDir
+            - write_output docker_resources buildName=$mvn_package_buildName buildNumber=$mvn_package_buildNumber
+
 #        execution:
 #          onStart:
 #            - echo $step_tmp_dir
