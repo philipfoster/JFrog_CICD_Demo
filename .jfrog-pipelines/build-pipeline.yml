@@ -13,12 +13,6 @@ resources:
     configuration:
       sourceArtifactory: {{ .Values.artifactory.name }}
 
-  - name: docker_resources
-    type: FileSpec
-    configuration:
-      target: $shared_workspace
-      sourceArtifactory: {{ .Values.artifactory.name }}
-
 pipelines:
 
   - name: demo_maven
@@ -38,8 +32,8 @@ pipelines:
           integrations:
             - name: {{ .Values.artifactory.name }}
         execution:
-          onStart:
-            - mkdir $shared_workspace/target
+          onSuccess:
+            - add_cache_files $res_git_repo_resourcePath/target targetDir
 #        execution:
 #          onStart:
 #            - echo $step_tmp_dir
@@ -107,18 +101,21 @@ pipelines:
             - name: mvn_test
           inputResources:
             - name: git_repo
-            - name: docker_resources
           integrations:
             - name: {{ .Values.artifactory.name }}
         execution:
           onStart:
-#            - echo "Restoring target directory"
-#            - mkdir ./target
-#            - cp -r $shared_workspace/target/* ./target
-            - pushd $shared_workspace
-            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-            - ls -lath target
-            - popd
+#            - add_cache_files $res_git_repo_resourcePath/target targetDir
+            - restore_cache_files targetDir $res_git_repo_resourcePath/target
+      #          onStart:
+##            - echo "Restoring target directory"
+##            - mkdir ./target
+##            - cp -r $shared_workspace/target/* ./target
+#            - pushd $shared_workspace
+#            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+#            - ls -lath target
+#            - popd
+
 
       - name: push_docker_image
         type: DockerPush
@@ -130,14 +127,7 @@ pipelines:
           inputSteps:
             - name: build_docker_image
         execution:
-          onStart:
-#            - echo "Restoring target directory"
-#            - mkdir ./target
-#            - cp -r $shared_workspace/target/* ./target
-            - pushd $shared_workspace
-            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-            - ls -lath
-            - popd
+
 
 #
 #      - name: publish_docker_build
