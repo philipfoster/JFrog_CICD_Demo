@@ -40,7 +40,10 @@ pipelines:
         execution:
           onSuccess:
             - echo "Done building JAR"
-            - ls -lath $step_dependency_state_dir
+            - pushd $step_dependency_state_dir/resources
+            - ls -lath
+            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+            - popd
             - mkdir $shared_workspace/target
             - cp -r target $shared_workspace/target
             - ls -lath $shared_workspace/target
