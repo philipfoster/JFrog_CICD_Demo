@@ -37,16 +37,16 @@ pipelines:
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
-        execution:
-          onSuccess:
-            - echo "Done building JAR"
-            - pushd $step_dependency_state_dir/resources/git_repo/target
-            - ls -lath
-            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-            - popd
-            - mkdir $shared_workspace/target
-            - cp -r $step_dependency_state_dir/resources/git_repo/target $shared_workspace/target
-            - ls -lath $shared_workspace/target
+#        execution:
+#          onSuccess:
+#            - echo "Done building JAR"
+#            - pushd $step_dependency_state_dir/resources/git_repo/target
+#            - ls -lath
+#            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+#            - popd
+#            - mkdir $shared_workspace/target
+#            - cp -r $step_dependency_state_dir/resources/git_repo/target $shared_workspace
+#            - ls -lath $shared_workspace/target
 
       - name: publish_mvn_build
         type: PublishBuildInfo
@@ -81,47 +81,65 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
           inputSteps:
             - name: security_scan
-#        execution:
-#          onStart:
-#            - echo "Restoring target directory"
-#            - mkdir ./target
-#            - cp -r $shared_workspace/target/* ./target
-
+        execution:
+          onStart:
+            - echo "Restoring target directory"
+            - cp -r $shared_workspace/target $step_dependency_state_dir/resources/git_repo
+            - ls -lath $step_dependency_state_dir/resources/git_repo
 
       - name: build_docker_image
-        type: DockerBuild
+        type: MvnBuild
         configuration:
           affinityGroup: build
-          dockerFileLocation: .
-          dockerFileName: Dockerfile
-          dockerImageName: {{ .Values.docker.imageName }}
-          dockerImageTag: ${run_number}
-          dockerOptions: --build-arg TARGET_DIR=${shared_workspace}
-          inputSteps:
-            - name: mvn_test
+          mvnCommand: spring-boot:build-image
+          deployerSnapshotRepo: {{ .Values.snapshotRepo }}
+          deployerReleaseRepo: {{ .Values.releaseRepo }}
           inputResources:
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
+          inputSteps:
+            - name: mvn_test
         execution:
           onStart:
-            - pushd $shared_workspace
-            - ls -lath $shared_workspace
-            - ls -lath $shared_workspace/target
-            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-            - ls -lath target
-            - popd
+            - echo "Restoring target directory"
+            - cp -r $shared_workspace/target $step_dependency_state_dir/resources/git_repo
+            - ls -lath $step_dependency_state_dir/resources/git_repo
+
+#      - name: build_docker_image
+#        type: DockerBuild
+#        configuration:
+#          affinityGroup: build
+#          dockerFileLocation: .
+#          dockerFileName: Dockerfile
+#          dockerImageName: {{ .Values.docker.imageName }}
+#          dockerImageTag: ${run_number}
+#          dockerOptions: --build-arg TARGET_DIR=${shared_workspace}
+#          inputSteps:
+#            - name: mvn_test
+#          inputResources:
+#            - name: git_repo
+#          integrations:
+#            - name: {{ .Values.artifactory.name }}
+#        execution:
+#          onStart:
+#            - pushd $shared_workspace
+#            - ls -lath $shared_workspace
+#            - ls -lath $shared_workspace/target
+#            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+#            - ls -lath target
+#            - popd
 
 
-      - name: push_docker_image
-        type: DockerPush
-        configuration:
-          affinityGroup: build
-          forceXrayScan: true
-          integrations:
-            - name: {{ .Values.artifactory.name }}
-          inputSteps:
-            - name: build_docker_image
+#      - name: push_docker_image
+#        type: DockerPush
+#        configuration:
+#          affinityGroup: build
+#          forceXrayScan: true
+#          integrations:
+#            - name: {{ .Values.artifactory.name }}
+#          inputSteps:
+#            - name: build_docker_image
 
 
 #
