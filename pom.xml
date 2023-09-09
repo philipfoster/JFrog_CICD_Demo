@@ -88,7 +88,7 @@
                         <configuration>
                             <image>
                                 <name>nvsconsulting.jfrog.io/cicd-demo-container-images/swampup23/${project.artifactId}:${project.version}</name>
-                                <publish>false</publish>
+                                <publish>true</publish>
                             </image>
                             <docker>
                                 <publishRegistry>
