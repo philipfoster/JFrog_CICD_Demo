@@ -65,31 +65,48 @@
             <id>cicd</id>
             <build>
                 <plugins>
+
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <version>3.3.1</version>
-                        <executions>
-                            <execution>
-                                <id>cicd-stash-target</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${stash_dir}/target</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>target</directory>
-                                            <includes>
-                                                <include>**</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <image>
+                                <name>nvsconsulting.jfrog.io/cicd-demo-container-images/swampup23/${project.artifactId}:${project.version}</name>
+                                <publish>true</publish>
+                            </image>
+                            <docker>
+                                <publishRegistry>
+                                    <username>${env.int_MyArtifactory_user}</username>
+                                    <password>${env.int_MyArtifactory_apiKey}</password>
+                                </publishRegistry>
+                            </docker>                        </configuration>
                     </plugin>
+
+<!--                    <plugin>-->
+<!--                        <groupId>org.apache.maven.plugins</groupId>-->
+<!--                        <artifactId>maven-resources-plugin</artifactId>-->
+<!--                        <version>3.3.1</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>cicd-stash-target</id>-->
+<!--                                <phase>install</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>copy-resources</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <outputDirectory>${stash_dir}/target</outputDirectory>-->
+<!--                                    <resources>-->
+<!--                                        <resource>-->
+<!--                                            <directory>target</directory>-->
+<!--                                            <includes>-->
+<!--                                                <include>**</include>-->
+<!--                                            </includes>-->
+<!--                                        </resource>-->
+<!--                                    </resources>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
                 </plugins>
             </build>
         </profile>

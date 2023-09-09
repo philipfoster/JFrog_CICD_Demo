@@ -86,12 +86,14 @@ pipelines:
             - echo "Restoring target directory"
             - cp -r $shared_workspace/target $step_dependency_state_dir/resources/git_repo
             - ls -lath $step_dependency_state_dir/resources/git_repo
+            - ls -lath $step_dependency_state_dir/resources/git_repo/target
+
 
       - name: build_oci_image
         type: MvnBuild
         configuration:
           affinityGroup: build
-          mvnCommand: spring-boot:build-image
+          mvnCommand: spring-boot:build-image -Pcicd
           deployerSnapshotRepo: {{ .Values.snapshotRepo }}
           deployerReleaseRepo: {{ .Values.releaseRepo }}
           inputResources:
@@ -105,6 +107,7 @@ pipelines:
             - echo "Restoring target directory"
             - cp -r $shared_workspace/target $step_dependency_state_dir/resources/git_repo
             - ls -lath $step_dependency_state_dir/resources/git_repo
+            - ls -lath $step_dependency_state_dir/resources/git_repo/target
 
 #      - name: build_docker_image
 #        type: DockerBuild
