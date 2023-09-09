@@ -39,21 +39,10 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
         execution:
           onSuccess:
-            - write_output docker_resources buildName=$mvn_package_buildName buildNumber=$mvn_package_buildNumber
-
-#        execution:
-#          onStart:
-#            - echo $step_tmp_dir
-#            - ls $step_tmp_dir
-#            - ls "/var/opt/jfrog/pipelines/data/$pipeline_name/runs/$run_number/steps/$step_name/$step_id"
-#
-#          onSuccess:
-#            - echo "Done building JAR"
-#            - ls $step_tmp_dir
-#            - ls "/var/opt/jfrog/pipelines/data/$pipeline_name/runs/$run_number/steps/$step_name/$step_id"
-#            - add_run_files $step_tmp_dir/target target
-#            - mkdir $shared_workspace/target
-#            - cp -r $(pwd)/target/* $shared_workspace/target
+            - echo "Done building JAR"
+            - mkdir $shared_workspace/target
+            - cp -r $(pwd)/target $shared_workspace/target
+            - ls -lath $shared_workspace/target
 
       - name: publish_mvn_build
         type: PublishBuildInfo
@@ -103,7 +92,7 @@ pipelines:
           dockerFileName: Dockerfile
           dockerImageName: {{ .Values.docker.imageName }}
           dockerImageTag: ${run_number}
-          dockerOptions: --build-arg TARGET_DIR=.
+          dockerOptions: --build-arg TARGET_DIR=$shared_workspace/target
           inputSteps:
             - name: mvn_test
           inputResources:
@@ -112,12 +101,6 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
 #        execution:
 #          onStart:
-#            - add_cache_files $res_git_repo_resourcePath/target targetDir
-#            - restore_cache_files targetDir $res_git_repo_resourcePath/target
-      #          onStart:
-##            - echo "Restoring target directory"
-##            - mkdir ./target
-##            - cp -r $shared_workspace/target/* ./target
 #            - pushd $shared_workspace
 #            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 #            - ls -lath target
