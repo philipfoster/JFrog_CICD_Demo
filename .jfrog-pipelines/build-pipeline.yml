@@ -40,12 +40,12 @@ pipelines:
         execution:
           onSuccess:
             - echo "Done building JAR"
-            - pushd $step_dependency_state_dir/resources
+            - pushd $step_dependency_state_dir/resources/git_repo/target
             - ls -lath
             - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
             - popd
             - mkdir $shared_workspace/target
-            - cp -r target $shared_workspace/target
+            - cp -r $step_dependency_state_dir/resources/git_repo/target $shared_workspace/target
             - ls -lath $shared_workspace/target
 
       - name: publish_mvn_build
@@ -103,12 +103,14 @@ pipelines:
             - name: git_repo
           integrations:
             - name: {{ .Values.artifactory.name }}
-#        execution:
-#          onStart:
-#            - pushd $shared_workspace
-#            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-#            - ls -lath target
-#            - popd
+        execution:
+          onStart:
+            - pushd $step_dependency_state_dir/resources/git_repo
+            - mkdir target
+            - cp -r $shared_workspace/target .
+            - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+            - ls -lath target
+            - popd
 
 
       - name: push_docker_image
