@@ -81,12 +81,12 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
           inputSteps:
             - name: security_scan
-        execution:
-          onStart:
-            - echo "Restoring target directory"
-            - cp -r $shared_workspace/target $step_dependency_state_dir/resources/git_repo
-            - ls -lath $step_dependency_state_dir/resources/git_repo
-            - ls -lath $step_dependency_state_dir/resources/git_repo/target
+#        execution:
+#          onStart:
+#            - echo "Restoring target directory"
+#            - cp -r $shared_workspace/target $step_dependency_state_dir/resources/git_repo
+#            - ls -lath $step_dependency_state_dir/resources/git_repo
+#            - ls -lath $step_dependency_state_dir/resources/git_repo/target
 
 
       - name: build_oci_image
@@ -102,12 +102,12 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
           inputSteps:
             - name: mvn_test
-        execution:
-          onStart:
-            - echo "Restoring target directory"
-            - cp -r $shared_workspace/target $step_dependency_state_dir/resources/git_repo
-            - ls -lath $step_dependency_state_dir/resources/git_repo
-            - ls -lath $step_dependency_state_dir/resources/git_repo/target
+#        execution:
+#          onStart:
+#            - echo "Restoring target directory"
+#            - cp -r $shared_workspace/target $step_dependency_state_dir/resources/git_repo
+#            - ls -lath $step_dependency_state_dir/resources/git_repo
+#            - ls -lath $step_dependency_state_dir/resources/git_repo/target
 
 #      - name: build_docker_image
 #        type: DockerBuild
