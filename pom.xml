@@ -76,10 +76,11 @@
                             </image>
                             <docker>
                                 <publishRegistry>
-                                    <username>${env.int_MyArtifactory_user}</username>
-                                    <password>${env.int_MyArtifactory_apiKey}</password>
+                                    <username>${int_Artifactory_user}</username>
+                                    <password>${int_Artifactory_apikey}</password>
                                 </publishRegistry>
-                            </docker>                        </configuration>
+                            </docker>
+                        </configuration>
                     </plugin>
 
 <!--                    <plugin>-->
