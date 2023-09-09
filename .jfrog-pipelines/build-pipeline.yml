@@ -96,7 +96,7 @@ pipelines:
           dockerFileName: Dockerfile
           dockerImageName: {{ .Values.docker.imageName }}
           dockerImageTag: ${run_number}
-          dockerOptions: --build-arg TARGET_DIR=$shared_workspace
+          dockerOptions: --build-arg TARGET_DIR=${shared_workspace}
           inputSteps:
             - name: mvn_test
           inputResources:
