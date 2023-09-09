@@ -41,7 +41,7 @@ pipelines:
           onSuccess:
             - echo "Done building JAR"
             - mkdir $shared_workspace/target
-            - cp -r $(pwd)/target $shared_workspace/target
+            - cp -r target $shared_workspace/target
             - ls -lath $shared_workspace/target
 
       - name: publish_mvn_build
