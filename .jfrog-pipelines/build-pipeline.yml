@@ -87,7 +87,7 @@ pipelines:
             - cp -r $shared_workspace/target $step_dependency_state_dir/resources/git_repo
             - ls -lath $step_dependency_state_dir/resources/git_repo
 
-      - name: build_docker_image
+      - name: build_oci_image
         type: MvnBuild
         configuration:
           affinityGroup: build
