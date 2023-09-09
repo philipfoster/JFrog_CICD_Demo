@@ -71,7 +71,7 @@
             </activation>
             <properties>
                 <!-- Set default run number. When run in CICD pipeline, this will be the actual build id. -->
-                <run_number>0</run_number>
+                <run_number>1</run_number>
             </properties>
         </profile>
         <profile>
