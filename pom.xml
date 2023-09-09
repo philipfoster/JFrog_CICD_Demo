@@ -10,12 +10,15 @@
 
     <groupId>io.nvsconsulting</groupId>
     <artifactId>jfrog-demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${build.baseVersion}.${run_number}-SNAPSHOT</version>
     <name>Jfrog Demo</name>
     <description>Jfrog Demo</description>
+
     <properties>
         <java.version>17</java.version>
+        <build.baseVersion>0.0.1</build.baseVersion>
     </properties>
+
 
     <dependencies>
         <dependency>
@@ -62,7 +65,20 @@
 
     <profiles>
         <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- Set default run number. When run in CICD pipeline, this will be the actual build id. -->
+                <run_number>0</run_number>
+            </properties>
+        </profile>
+        <profile>
             <id>cicd</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
 
@@ -72,7 +88,7 @@
                         <configuration>
                             <image>
                                 <name>nvsconsulting.jfrog.io/cicd-demo-container-images/swampup23/${project.artifactId}:${project.version}</name>
-                                <publish>true</publish>
+                                <publish>false</publish>
                             </image>
                             <docker>
                                 <publishRegistry>
