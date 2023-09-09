@@ -105,9 +105,9 @@ pipelines:
             - name: {{ .Values.artifactory.name }}
         execution:
           onStart:
-            - pushd $step_dependency_state_dir/resources/git_repo
-            - mkdir target
-            - cp -r $shared_workspace/target .
+            - pushd $shared_workspace
+            - ls -lath $shared_workspace
+            - ls -lath $shared_workspace/target
             - ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
             - ls -lath target
             - popd
