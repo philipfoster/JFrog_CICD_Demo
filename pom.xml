@@ -10,7 +10,7 @@
 
     <groupId>io.nvsconsulting</groupId>
     <artifactId>jfrog-demo</artifactId>
-    <version>${build.baseVersion}.${run_number}-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>Jfrog Demo</name>
     <description>Jfrog Demo</description>
 
@@ -62,71 +62,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <!-- Set default run number. When run in CICD pipeline, this will be the actual build id. -->
-                <run_number>1</run_number>
-            </properties>
-        </profile>
-        <profile>
-            <id>cicd</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <configuration>
-                            <image>
-                                <name>nvsconsulting.jfrog.io/cicd-demo-container-images/swampup23/${project.artifactId}:${project.version}</name>
-                                <publish>true</publish>
-                            </image>
-                            <docker>
-                                <publishRegistry>
-                                    <username>${int_Artifactory_user}</username>
-                                    <password>${int_Artifactory_apikey}</password>
-                                </publishRegistry>
-                            </docker>
-                        </configuration>
-                    </plugin>
-
-<!--                    <plugin>-->
-<!--                        <groupId>org.apache.maven.plugins</groupId>-->
-<!--                        <artifactId>maven-resources-plugin</artifactId>-->
-<!--                        <version>3.3.1</version>-->
-<!--                        <executions>-->
-<!--                            <execution>-->
-<!--                                <id>cicd-stash-target</id>-->
-<!--                                <phase>install</phase>-->
-<!--                                <goals>-->
-<!--                                    <goal>copy-resources</goal>-->
-<!--                                </goals>-->
-<!--                                <configuration>-->
-<!--                                    <outputDirectory>${stash_dir}/target</outputDirectory>-->
-<!--                                    <resources>-->
-<!--                                        <resource>-->
-<!--                                            <directory>target</directory>-->
-<!--                                            <includes>-->
-<!--                                                <include>**</include>-->
-<!--                                            </includes>-->
-<!--                                        </resource>-->
-<!--                                    </resources>-->
-<!--                                </configuration>-->
-<!--                            </execution>-->
-<!--                        </executions>-->
-<!--                    </plugin>-->
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>
