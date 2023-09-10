@@ -24,12 +24,12 @@
         <repository>
             <id>artifactory</id>
             <name>artifactory</name>
-            <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-release</url>
+            <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-release-local</url>
         </repository>
         <snapshotRepository>
             <id>artifactory</id>
             <name>artifactory-snapshots</name>
-            <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-snapshots</url>
+            <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-snapshots-local</url>
         </snapshotRepository>
     </distributionManagement>
 
