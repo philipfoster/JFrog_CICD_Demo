@@ -23,9 +23,14 @@
     <distributionManagement>
         <repository>
             <id>artifactory</id>
-            <name>dev-demo-libs-release</name>
+            <name>artifactory</name>
             <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-release</url>
         </repository>
+        <snapshotRepository>
+            <id>artifactory</id>
+            <name>artifactory-snapshots</name>
+            <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
