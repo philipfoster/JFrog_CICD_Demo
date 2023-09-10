@@ -20,6 +20,14 @@
     </properties>
 
 
+    <distributionManagement>
+        <repository>
+            <id>artifactory</id>
+            <name>dev-demo-libs-release</name>
+            <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-release</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
