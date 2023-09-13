@@ -2,6 +2,33 @@
     padding: 5px 5px 5px 15px;
 }
 
+.debug {
+    border: red 2px dashed;
+}
+
 .content-container {
-    padding: 10px
+    padding: 10px;
+    height: 100%;
+}
+
+.hello-container {
+    /*flex-direction: row;*/
+    justify-content: center;
+}
+
+.welcome-message {
+    padding-top: 10%;
+    padding-bottom: 10%;
+    text-align: center;
+}
+
+.logo-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.logo {
+    margin: auto;
+    padding: 10px;
 }
