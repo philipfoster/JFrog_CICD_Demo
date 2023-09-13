@@ -3,4 +3,4 @@ type: maven
 resolver:
     serverId: nvsconsulting
     snapshotRepo: dev-demo-libs-snapshot
-    releaseRepo: dev-demo-libs-releases
+    releaseRepo: dev-demo-libs-release

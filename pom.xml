@@ -28,7 +28,7 @@
             <name>artifactory-snapshots</name>
             <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-snapshot-local</url>
         </snapshotRepository>
-    </distributionManagement>g
+    </distributionManagement>
 
     <dependencies>
         <dependency>
