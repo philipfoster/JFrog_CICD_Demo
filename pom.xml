@@ -17,6 +17,19 @@
         <java.version>17</java.version>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>artifactory</id>
+            <name>artifactory</name>
+            <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>artifactory</id>
+            <name>artifactory-snapshots</name>
+            <url>https://nvsconsulting.jfrog.io/artifactory/dev-demo-libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>g
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
